@@ -13,32 +13,32 @@ Assignment 01
 using namespace std;
 
 // Variable declarations
-int playerhealth = 100;     //Health of player.
-int aihealth = 100;         //Health of computer.
+int playerHealth = 100;     //Health of player.
+int aiHealth = 100;         //Health of computer.
 int dmg = 0;                //Damage to apply if chance is successful.
 int action = 0;             //Action that is used (move 1-5).
-int lastaction = 0;         //Holds the last move that happened
-int hitchance = 0;          // Holds total chance to hit the enemy.
-int bonuschance = 0;        // Bonus chance to hit. Will be negative if enemy uses a counter.
-float bonusdmg = 1;         // Multiplier for the damage dealt. 1 by default, 1.5 if using the amulet.
+int lastAction = 0;         //Holds the last move that happened
+int hitChance = 0;          // Holds total chance to hit the enemy.
+int bonusChance = 0;        // Bonus chance to hit. Will be negative if enemy uses a counter.
+float bonusDmg = 1;         // Multiplier for the damage dealt. 1 by default, 1.5 if using the amulet.
 float r = 0;                // Holds the random number generated to use percent chance of doing an action.
-bool playeramuletused = 0;  // Holds if the amulet has already been used.
-bool aiamuletused = 0;      // ^^
-bool gameover = 0;          //Triggered when one of them die.
+bool playerAmuletUsed = 0;  // Holds if the amulet has already been used.
+bool aiAmuletUsed = 0;      // ^^
+bool gameOver = 0;          //Triggered when one of them die.
 string turn = "player";     //Holds whose turn it is.
 
 void game();
-void move1();
-void move2();
-void move3();
-void move4();
-void move5();
-void aigame();
-void aimove1();
-void aimove2();
-void aimove3();
-void aimove4();
-void aimove5();
+void standardMove();
+void heavyMove();
+void counterMove();
+void defendMove();
+void amuletMove();
+void aiGame();
+void aiStandardMove();
+void aiHeavyMove();
+void aiCounterMove();
+void aiDefendMove();
+void aiAmuletMove();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -57,7 +57,10 @@ int main()
 	printf("2 - View Instructions\n");
 	printf("3 - Quit Game\n\n");
 
-	scanf_s("%d", &menuresponse);
+	do
+	{
+		scanf_s("%d", &menuresponse);
+	} while (menuresponse != 1 || menureponse != 2 || menuresponse != 3);
 
 	switch (menuresponse)
 	{
@@ -111,7 +114,7 @@ int main()
 		}
 		default:
 		{
-			main();
+			return 0;
 		}
 	}
 }
@@ -121,63 +124,66 @@ int main()
 
 void game()
 {
-	if (playerhealth <= 0 || aihealth <= 0)
+	do
 	{
-		gameover = 0;
-	}
-	system("cls");
-	printf("--------------------------------------------------------------------------------\n");
-	printf("                                Immortal Kombat                                 \n");
-	printf("--------------------------------------------------------------------------------\n\n");
-	printf(" Player  Health: [%d]\n", playerhealth);
-	printf("Computer Health: [%d]\n\n", aihealth);
-	printf("Enter your chosen move number.\n");
-	scanf_s("%d", &action);
-
-	if (turn == "player")
-	{
-		switch (action)
+		if (playerHealth <= 0 || aiHealth <= 0)
 		{
-			case 1:
+			gameOver = 1;
+		}
+		system("cls");
+		printf("--------------------------------------------------------------------------------\n");
+		printf("                                Immortal Kombat                                 \n");
+		printf("--------------------------------------------------------------------------------\n\n");
+		printf(" Player  Health: [%d]\n", playerHealth);
+		printf("Computer Health: [%d]\n\n", aiHealth);
+		printf("Enter your chosen move number.\n");
+		scanf_s("%d", &action);
+	
+		if (turn == "player")
+		{
+			switch (action)
 			{
-				move1();
-			}
-			case 2:
-			{
-				move2();
-			}
-			case 3:
-			{
-				move3();
-			}
-			case 4:
-			{
-				move4();
-			}
-			case 5:
-			{
-				move5();
+				case 1:
+				{
+					standardMove();
+				}
+				case 2:
+				{
+					heavyMove();
+				}
+				case 3:
+				{
+					counterMove();
+				}
+				case 4:
+				{
+					defendMove();
+				}
+				case 5:
+				{
+					amuletMove();
+				}
 			}
 		}
-	}
-	main();
+	} while (gameOver != 1);
+	return;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void move1()
+void standardMove()
 {
-	printf("You used a normal attack.\n");
+	printf("You used a standard attack.\n");
 	r = rand();
-	hitchance = 0.8 + bonuschance;
+	hitChance = 0.8 + bonusChance;
 
-	if (r <= hitchance)
+	if (r <= hitChance)
 	{
-		dmg = 10 * bonusdmg;
-		aihealth -= dmg;
+		dmg = 10 * bonusDmg;
+		aiHealth -= dmg;
 		turn = "ai";
-		bonuschance = 0;
-		bonusdmg = 1;
+		bonusChance = 0;
+		bonusDmg = 1;
 		Sleep(2000);
 		printf("You dealt %d damage to the enemy.\n", dmg);
 	}
@@ -188,22 +194,23 @@ void move1()
 	}
 	printf("Press any key to continue.");
 	_getch();
-	aigame();
+	aiGame();
+	return;
 }
 
-void move2()
+void heavyMove()
 {
 	printf("You used a heavy attack.\n");
 	r = rand();
-	hitchance = 0.5 + bonuschance;
+	hitChance = 0.5 + bonusChance;
 
-	if (r <= hitchance)
+	if (r <= hitChance)
 	{
-		dmg = 20 * bonusdmg;
-		aihealth -= dmg;
+		dmg = 20 * bonusDmg;
+		aiHealth -= dmg;
 		turn = "ai";
-		bonuschance = 0;
-		bonusdmg = 1;
+		bonusChance = 0;
+		bonusDmg = 1;
 		Sleep(2000);
 		printf("You dealt %d damage to the enemy.\n", dmg);
 	}
@@ -214,22 +221,23 @@ void move2()
 	}
 	printf("Press any key to continue.");
 	_getch();
-	aigame();
+	aiGame();
+	return;
 }
 
-void move3()
+void counterMove()
 {
 	printf("You used a counter attack.\n");
 	r = rand();
-	hitchance = 0.65 + bonuschance;
+	hitChance = 0.65 + bonusChance;
 
-	if (r <= hitchance)
+	if (r <= hitChance)
 	{
-		dmg = 6 * bonusdmg;
-		aihealth -= dmg;
+		dmg = 6 * bonusDmg;
+		aiHealth -= dmg;
 		turn = "ai";
-		bonuschance = 0;
-		bonusdmg = 1;
+		bonusChance = 0;
+		bonusDmg = 1;
 		Sleep(2000);
 		printf("You dealt %d damage to the enemy.\n", dmg);
 	}
@@ -240,46 +248,101 @@ void move3()
 	}
 	printf("Press any key to continue.");
 	_getch();
-	aigame();
+	aiGame();
+	return;
 }
 
-void move4()
+void defendMove()
 {
-	if (playerhealth <= 95)
+	if (playerHealth <= 95)
 	{
-		playerhealth += 5;
-		bonuschance = -30;
+		playerHealth += 5;
+		bonusChance = -30;
 		printf("You healed for 5 health points.\n");
 	}
 	else
 	{
-		printf("You cannot heal with %d health.\n", playerhealth);
+		printf("You cannot heal with %d health.\n", playerHealth);
 	}
 	printf("Press any key to continue.");
 	_getch();
-	aigame();
+	aiGame();
+	return;
 }
 
-void move5()
+void amuletMove()
 {
-	if (playeramuletused == 0)
+	if (playerAmuletUsed == 0)
 	{
 		printf("You have already used your amulet.\n");
 	}
 	else
 	{
-		bonusdmg = 1.5;
-		playeramuletused = 1;
+		bonusDmg = 1.5;
+		playerAmuletUsed = 1;
 	}
 	printf("Press any key to continue.");
 	_getch();
-	aigame();
+	aiGame();
+	return;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void aigame()
+void aiGame()
 {
 	printf("AI INITIALISED");
+	
+	switch (action)
+		{
+			case 1:
+			{
+				aiStandardMove();
+			}
+			case 2:
+			{
+				aiHeavyMove();
+			}
+			case 3:
+			{
+				aiCounterMove();
+			}
+			case 4:
+			{
+				aiDefendMove();
+			}
+			case 5:
+			{
+				aiAmuletMove();
+			}
+		}
 	_getch();
+	return;
+}
+
+void aiStandardMove()
+{
+	printf("The AI used a standard attack.\n");
+	r = rand();
+	hitChance = 0.8 + bonusChance;
+
+	if (r <= hitChance)
+	{
+		dmg = 10 * bonusDmg;
+		playerHealth -= dmg;
+		turn = "ai";
+		bonusChance = 0;
+		bonusDmg = 1;
+		Sleep(2000);
+		printf("You dealt %d damage to the enemy.\n", dmg);
+	}
+	else
+	{
+		Sleep(2000);
+		printf("Your attack missed the enemy!\n");
+	}
+	printf("Press any key to continue.");
+	_getch();
+	aiGame();
+	return;
 }
